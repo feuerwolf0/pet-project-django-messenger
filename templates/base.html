@@ -1,29 +1,91 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    {% load static %}
     <meta charset="UTF-8">
-    <title>pMessage</title>
-    {# include style.css #}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {#  include mdb styles  #}
-    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}">
+    <title>pMessage::{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <link rel="stylesheet" href="{% static '/css/mdb.min.css' %}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&amp;display=swap">
     <script src="https://kit.fontawesome.com/6705e182bd.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<nav class="navbar navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-collapse navbar-dark bg-dark" style="z-index: 2000;">
     <div class="container">
         <a href="" class="navbar-brand">pMessage</a>
+        <button
+                data-mdb-collapse-init
+                class="navbar-toggler"
+                type="button"
+                data-mdb-target="#navbarToggler"
+                aria-controls="navbarToggler"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggler">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Люди</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                {% if not request.user.is_authenticated %}
+                    <a href="{% url 'login' %}">
+                        <button data-mdb-ripple-init class="btn btn-link btn-light fw-bolder me-2" type="submit">
+                            Войти
+                            <i class="fa-regular fa-user ms-1 fw-bolder"></i>
+                        </button>
+                    </a>
+                    <a href="{% url 'signup' %}">
+                        <button data-mdb-ripple-init class="btn btn-link btn-light fw-bolder">
+                            Регистрация
+                        </button>
+                    </a>
+                {% else %}
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button data-mdb-ripple-init class="btn btn-link btn-light fw-bolder me-2" type="submit">
+                            Выйти
+                            <i class="fa-solid fa-right-from-bracket ms-1 fw-bolder"></i>
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </nav>
 <section>
-    <div class="container">
-        <div class="" style="height: 80vh"></div>
-    </div>
+    {% block content %}
+    {% endblock content %}
 </section>
-<footer>
-    footer
+<footer class="text-center text-lg-start">
+    <div class="container d-flex justify-content-center py-5">
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-youtube"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-instagram"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <i class="fab fa-twitter"></i>
+        </button>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center text-white p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        <a class="text-white" href="/">Django Messanger</a>
+    </div>
+    <!-- Copyright -->
 </footer>
-<script type="text/javascript" src="{% static 'js/mdb.umd.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/mdb.umd.min.js' %}"></script>
 </body>
 </html>

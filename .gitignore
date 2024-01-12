@@ -1,2 +1,5 @@
 .idea
 .venv
+/.env.dev
+/.env_db.dev
+/template_src

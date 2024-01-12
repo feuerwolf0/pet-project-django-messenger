@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div id="intro" class="shadow-2-strong">
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-11 col-sm-8 col-md-6 col-lg-4">
+                        <form class="p-5 rounded-4 bg-white" action="{% url 'login' %}" method="post">
+                            {% csrf_token %}
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <input type="text" name="login" id="loginInput" class="form-control form-control-lg bg-white">
+                                <label class="form-label" for="loginInput">Логин</label>
+                            </div>
+
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <input type="password" name="password" id="passwordInput" class="form-control form-control-lg bg-white">
+                                <label class="form-label" for="passwordInput">Пароль</label>
+                            </div>
+                            {% if messages %}
+                                {% for message in messages %}
+                                <div class="message">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="text-end mb-4">
+                                <a href="">Забыли пароль?</a>
+                            </div>
+
+                            <button class="btn btn-lg btn-block btn-primary" type="submit"
+                                    data-mdb-ripple-init>
+                                Войти
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

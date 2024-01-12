@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -5,9 +6,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+
+from accounts.forms import ProfileImageUploadForm
 from accounts.models import GENDER_CHOISES
 from accounts.models import Account
 from django.contrib.auth.decorators import login_required
+from .utils import save_uploaded_file, check_uploaded_image
 import re
 
 
@@ -20,7 +25,7 @@ def login_view(request):
         return redirect('profile')
     else:
         if request.method == 'POST':
-            username = request.POST['login']
+            username = request.POST['login'].lower()
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
             if user is not None:
@@ -61,12 +66,13 @@ def signup_view(request):
     context = {}
 
     if request.method == 'POST':
+
         first_name = request.POST.get('firstname')
         last_name = request.POST.get('lastname')
         gender = request.POST.get('gender')
         age = request.POST.get('age')
-        username = request.POST.get('login')
-        email = request.POST.get('email')
+        username = request.POST.get('login').lower()
+        email = request.POST.get('email').lower()
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
 
@@ -107,7 +113,7 @@ def signup_view(request):
                 return render(request, 'accounts/signup.html', context=context)
 
         # check equals passwords
-        if password1 != password2:
+        if password1 and password2 and password1 != password2:
             messages.warning(request, 'Пароли не совпадают')
             return render(request, 'accounts/signup.html', context=context)
 
@@ -125,15 +131,44 @@ def signup_view(request):
             gender = 0
 
         # create User model
-        user = User.objects.create_user(username=username, email=email, password=password2, first_name=first_name, last_name=last_name)
+        user = User.objects.create_user(username=username, email=email, password=password2, first_name=first_name,
+                                        last_name=last_name)
         # create Account model
         account = Account.objects.create(user=user,
-                          username=username,
-                          first_name=first_name,
-                          last_name=last_name,
-                          email=email,
-                          gender=gender)
+                                         username=username,
+                                         first_name=first_name,
+                                         last_name=last_name,
+                                         email=email,
+                                         gender=gender)
         login(request, user)
         return redirect('profile')
 
     return render(request, 'accounts/signup.html', context=context)
+
+
+@login_required
+def profile_edit_view(request):
+    account = Account.objects.get(user=request.user)
+    context = {
+        'account': account
+    }
+    return render(request, 'accounts/edit_profile.html', context=context)
+
+
+@require_http_methods(['POST'])
+def profile_upload_image_view(request):
+    uploaded_image = request.FILES.get('image_upload')
+
+    error = check_uploaded_image(uploaded_image)
+    if error:
+        messages.warning(request, error, extra_tags='upload_error')
+        return redirect('profile_edit')
+
+    file_path = save_uploaded_file(uploaded_image, uploaded_image.name)
+    account = Account.objects.get(user=request.user)
+    account.avatar = file_path
+    account.save()
+
+    return redirect('profile_edit')
+
+

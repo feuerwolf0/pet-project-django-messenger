@@ -6,16 +6,31 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="{{ account.avatar.url }}" alt="avatar"
-                             class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
-                        {% if account.status %}
-                            <p class="text-muted mb-1">{{ account.status }}</p>
+                        <div class="img-profile">
+                            <img src="{{ account.avatar.url }}" alt="avatar"
+                                 class="rounded-circle  img-fluid">
+                        </div>
+                        <form action="{% url 'profile_upload_image' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="d-flex flex-column align-items-center">
+                                <label class="form-label" for="uploadImage">Изменить фото профиля</label>
+                                <input type="file" class="form-control"
+                                       name="image_upload" accept="image/png, image/jpeg" id="uploadImage"/>
+                                <button type="submit" class="btn btn-primary mt-2">Загрузить изображение
+                                </button>
+                            </div>
+                        </form>
+                        {% if messages %}
+                            <div class="text-center p-2">
+                                {% for msg in messages %}
+                                    {% if msg.extra_tags == 'upload_error' %}
+                                        <div class="message text-danger fw-bolder">
+                                            {{ msg }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         {% endif %}
-                        <!--       редактировать профиль                 -->
-                        <button class="btn btn-link btn-outline-primary mt-2">
-                            <a href="{% url 'profile_edit' %}">Редактировать профиль</a>
-                        </button>
                     </div>
                 </div>
                 <!--      Опции профиля    -->

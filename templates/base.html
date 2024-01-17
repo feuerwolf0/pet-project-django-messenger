@@ -28,10 +28,16 @@
         <div class="collapse navbar-collapse" id="navbarToggler">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Главная</a>
+                    <a class="nav-link" href="{% url 'index' %}">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Люди</a>
+                    <a class="nav-link" href="{% url 'profile' %}">Мой профиль</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Мои друзья</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'find_people' %}">Поиск друзей</a>
                 </li>
             </ul>
             <div class="d-flex align-items-center">

@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView, DetailView
 
-from accounts.models import GENDER_CHOISES
 from accounts.models import Account
 from django.contrib.auth.decorators import login_required
 from .utils import save_uploaded_file, check_uploaded_image, validate_name, validate_username
@@ -41,7 +42,6 @@ def profile_view(request):
 
     context = {
         'account': account,
-        'gender': GENDER_CHOISES.get(account.gender)
     }
     return render(request, 'accounts/profile.html', context=context)
 
@@ -275,3 +275,17 @@ def update_password(request):
     messages.success(request, 'Пароль успешно изменен', extra_tags='pwd_changed')
 
     return redirect('profile_edit')
+
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = Account
+    template_name = 'accounts/user_profile.html'
+    context_object_name = 'account'
+    slug_field = 'username'
+
+
+class PeopleView(LoginRequiredMixin, ListView):
+    model = Account
+    template_name = 'accounts/people.html'
+    context_object_name = 'accounts'
+    paginate_by = 20

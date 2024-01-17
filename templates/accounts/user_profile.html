@@ -3,28 +3,7 @@
     <div class="container py-5">
 
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="img-profile">
-                            <img src="{{ account.avatar.url }}" alt="avatar"
-                                 class="rounded-circle  img-fluid">
-                        </div>
-                        <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
-                        {% if account.status %}
-                            <p class="text-muted mb-1">{{ account.status }}</p>
-                        {% endif %}
-                        <!--       редактировать профиль                 -->
-                        <a href="{% url 'profile_edit' %}">
-                            <button class="btn btn-link btn-outline-primary mt-2">
-                                Редактировать профиль
-                            </button>
-                        </a>
-                    </div>
-                </div>
-                <!--      Опции профиля    -->
-                {% include 'accounts/blocks/profile_sidebar.html' %}
-            </div>
+
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-body">
@@ -45,22 +24,12 @@
                                 <p class="text-muted mb-0">{{ account.first_name }} {{ account.last_name }}</p>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Email</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ account.email }}</p>
-                            </div>
-                        </div>
-                        <hr>
+                        <hr/>
                         <div class="row">
                             <div class="col-sm-3">
                                 <p class="mb-0">Пол</p>
                             </div>
                             <div class="col-sm-9">
-                                <div class="col-sm-9">
                                 {% if account.gender == 1 %}
                                 <p class="text-muted mb-0">Мужчина</p>
                                 {% else %}
@@ -114,6 +83,33 @@
                         {% endif %}
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="img-profile">
+                            <img src="{{ account.avatar.url }}" alt="avatar"
+                                 class="rounded-circle  img-fluid">
+                        </div>
+                        <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
+                        {% if account.status %}
+                            <p class="text-muted mb-1">{{ account.status }}</p>
+                        {% endif %}
+                        <!--       редактировать профиль                 -->
+                        <a href="">
+                            <button class="btn btn-primary mt-2">
+                                Добавить в друзья
+                            </button>
+                        </a>
+                        <a href="">
+                            <button class="btn btn-primary mt-2">
+                                Написать сообщение
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!--      Опции профиля    -->
+                {% include 'accounts/blocks/profile_sidebar.html' %}
             </div>
         </div>
     </div>

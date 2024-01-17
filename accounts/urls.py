@@ -12,7 +12,5 @@ urlpatterns = [
     path('profile/edit/update_profile/', views.update_profile, name='update_profile'),
     path('profile/edit/upload_image/', views.profile_upload_image, name='profile_upload_image'),
     path('profile/edit', views.profile_edit_view, name='profile_edit'),
-    path('profile/', views.profile_view, name='profile'),
-    path('profiles/<slug:slug>/', views.UserProfileView.as_view(), name='user_profile'),
-    path('find_people/', views.PeopleView.as_view(), name='find_people')
+    path('profile/', views.profile_view, name='profile')
 ]

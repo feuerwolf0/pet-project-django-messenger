@@ -31,4 +31,21 @@ body {
     object-fit: cover;
 }
 
-.modal
+.img-myfriends {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    /*margin: 0px auto;*/
+}
+
+.img-myfriends img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.my-friend-list {
+    /*height: 50px;*/
+    /*vertical-align: center;*/
+
+}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container py-5">
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="img-profile">
+                        <img src="{{ account.avatar.url }}" alt="avatar"
+                             class="rounded-circle  img-fluid">
+                    </div>
+                    <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
+                    {% if account.status %}
+                        <p class="text-muted mb-1">{{ account.status }}</p>
+                    {% endif %}
+                    <!--       редактировать профиль                 -->
+                    <a href="{% url 'profile_edit' %}">
+                        <button class="btn btn-link btn-outline-primary mt-2">
+                            Редактировать профиль
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!--      Опции профиля    -->
+            {% include 'accounts/blocks/profile_sidebar.html' %}
+        </div>
+        {% if friendship_requests %}
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        {% for fr in friendship_requests %}
+                            <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
+                                <div class="img-myfriends">
+                                    <img src="{{ fr.from_user.avatar.url }}" alt="avatar"
+                                         class="rounded-circle img-fluid">
+                                </div>
+                                <p class="fw-bolder m-2 ms-5 me-auto">{{ fr.from_user.first_name }} {{ fr.from_user.last_name }}</p>
+                                <button type="button" class="btn btn-primary me-2 m-2" data-mdb-ripple-init>Принять в
+                                    друзья
+                                </button>
+                                <button type="button" class="btn btn-danger m-2" data-mdb-ripple-init>Удалить</button>
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% if friends %}
+    {% endif %}
+    </div>
+{% endblock content %}

@@ -31,9 +31,9 @@
                             </div>
                             <div class="col-sm-9">
                                 {% if account.gender == 1 %}
-                                <p class="text-muted mb-0">Мужчина</p>
+                                    <p class="text-muted mb-0">Мужчина</p>
                                 {% else %}
-                                <p class="text-muted mb-0">Женщина</p>
+                                    <p class="text-muted mb-0">Женщина</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -95,21 +95,30 @@
                         {% if account.status %}
                             <p class="text-muted mb-1">{{ account.status }}</p>
                         {% endif %}
-                        <!--       редактировать профиль                 -->
-                        <a href="">
-                            <button class="btn btn-primary mt-2">
-                                Добавить в друзья
+                        {% if not friendship_request %}
+                            <form method="POST" action="{% url 'add_friend' account.username %}">
+                                <input type="hidden" name="user_to" value="{{ account.username }}">
+                                <button class="btn btn-primary mt-2" type="submit">
+                                    Добавить в друзья
+                                </button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-primary mt-2" type="submit" disabled>
+                                Заявка отправлена
                             </button>
-                        </a>
+                        {% endif %}
                         <a href="">
                             <button class="btn btn-primary mt-2">
                                 Написать сообщение
                             </button>
                         </a>
+                        <a href="">
+                            <button class="btn btn-danger mt-2">
+                                Заблокировать
+                            </button>
+                        </a>
                     </div>
                 </div>
-                <!--      Опции профиля    -->
-                {% include 'accounts/blocks/profile_sidebar.html' %}
             </div>
         </div>
     </div>

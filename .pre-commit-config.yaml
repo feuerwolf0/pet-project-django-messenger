@@ -10,8 +10,6 @@ repos:
       - id: check-byte-order-marker
       # предотвращает сохранение приватных ключей
       - id: detect-private-key
-      # проверяет, что файлы, которые мы собираемся сохранять, как минимум валидный Python
-      - id: check-ast
   - repo: 'https://github.com/PyCQA/flake8'
     rev: 7.0.0
     hooks:

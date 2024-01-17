@@ -1,15 +1,14 @@
 import os
 import random
+import re
 
 from django.core.files.storage import default_storage
 from django.conf import settings
 
 
+# сохраняет аватар пользователя при редактировании профиля
 def save_uploaded_file(instance, filename):
     upload_dir = settings.MEDIA_AVATARS
-
-    if not os.path.exists(upload_dir):
-        os.makedirs(upload_dir)
 
     file_ext = filename.split('.')[-1]
 
@@ -29,6 +28,7 @@ def save_uploaded_file(instance, filename):
     return file_path
 
 
+# проверяет фотографию перед загрузкой на сайт
 def check_uploaded_image(image):
     true_ext = {'jpg', 'jpeg', 'png'}
 
@@ -44,4 +44,15 @@ def check_uploaded_image(image):
     if image.size > settings.MAX_IMAGE_SIZE * 1024 * 1024:
         error = f'Максимальный размер загружаемых фотографий не может превышать {settings.MAX_IMAGE_SIZE}MB'
         return error
-    return
+
+    return None
+
+
+def validate_username(string):
+    pattern = re.compile(r'^[A-Za-z0-9_]+$')
+    return bool(pattern.match(string))
+
+
+def validate_name(string):
+    pattern = re.compile(r'^[A-Za-zА-Яа-яёЁ]+$')
+    return bool(pattern.match(string))

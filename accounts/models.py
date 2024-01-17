@@ -29,4 +29,3 @@ class Account(models.Model):
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
         ordering = ('created_at', )
-

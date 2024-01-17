@@ -20,6 +20,19 @@
                                 </button>
                             </div>
                         </form>
+                        <a href="{% url 'profile_change_password' %}">
+                            <button type="submit" class="btn btn-primary mt-3">Изменить пароль
+                            </button>
+                        </a>
+                        {% if messages %}
+                            {% for msg in messages %}
+                                {% if msg.extra_tags == 'pwd_changed' %}
+                                    <div class="alert alert-success mt-4" role="alert">
+                                        Пароль успешно изменен
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         {% if messages %}
                             <div class="text-center p-2">
                                 {% for msg in messages %}
@@ -34,170 +47,191 @@
                     </div>
                 </div>
                 <!--      Опции профиля    -->
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush rounded-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Мои друзья</a>
-                                </button>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Сообщения</a>
-                                </button>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Найти друга</a>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                {% include 'accounts/blocks/profile_sidebar.html' %}
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0 fw-bolder">Никнейм</p>
+                        <form action="{% url 'update_profile' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0 fw-bolder">Никнейм</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="fw-bolder mb-0">{{ account.username }}</p>
+                                </div>
                             </div>
-                            <div class="col-sm-9">
-                                <p class="fw-bolder mb-0">!{{ account.username }}</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Статус</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-outline" data-mdb-input-init>
+                                        {% if account.status %}
+                                        <input type="text" class="form-control" name='status'
+                                               value="{{ account.status }}"/>
+                                        {% else %}
+                                        <input type="text" class="form-control" name='status'
+                                               value="" />
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Имя</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Имя</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" name='firstname'
+                                               value="{{ account.first_name }}" required/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ account.first_name }} {{ account.last_name }}</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Фамилия</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <input type="text" class="form-control" name='lastname'
+                                               value="{{ account.last_name }}" required/>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Email</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Email</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <input type="email" class="form-control" name='email'
+                                               value="{{ account.email }}" required/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ account.email }}</p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Пол</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    {% if account.gender == 1 %}
+                                        <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   id="inlineRadio1" value="male" required checked/>
+                                            <label class="form-check-label" for="inlineRadio1">Мужчина</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   id="inlineRadio2" value="female"/>
+                                            <label class="form-check-label" for="inlineRadio2">Женщина</label>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-check form-check-inline mt-2">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   id="inlineRadio1" value="male" required/>
+                                            <label class="form-check-label" for="inlineRadio1">Мужчина</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"
+                                                   id="inlineRadio2" value="female" checked/>
+                                            <label class="form-check-label" for="inlineRadio2">Женщина</label>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Пол</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ gender }}</p>
-                            </div>
-                        </div>
-                        {% if  account.age %}
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0">Возраст</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.age }}</p>
+                                    <div class="form-outline" data-mdb-input-init>
+                                        {% if account.age %}
+                                            <input type="number" class="form-control" name='age'
+                                                   value="{{ account.age }}" min="0" max="160"/>
+                                        {% else %}
+                                            <input type="number" class="form-control" name='age'
+                                                   value="" min="0" max="160"/>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if account.city %}
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0">Город</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.city }}</p>
+
+                                    <div class="form-outline" data-mdb-input-init>
+                                        {% if account.city %}
+                                            <input type="text" class="form-control" name='city'
+                                                   value="{{ account.city }}"/>
+                                        {% else %}
+                                            <input type="text" class="form-control" name='city'
+                                                   value=""/>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if account.job %}
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0">Место работы</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.job }}</p>
+
+                                    <div class="form-outline" data-mdb-input-init>
+                                        {% if account.job %}
+                                            <input type="text" class="form-control" name='job'
+                                                   value="{{ account.job }}"/>
+                                        {% else %}
+                                            <input type="text" class="form-control" name='job'
+                                                   value=""/>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        {% endif %}
-                        {% if account.about %}
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0">О себе</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.about }}</p>
+
+                                    <div class="form-outline" data-mdb-input-init>
+                                        {% if account.about %}
+                                            <textarea type="text" class="form-control" name='about'
+                                                      rows="7">{{ account.about }}</textarea>
+                                        {% else %}
+                                            <textarea type="text" class="form-control" name='about' rows="7"></textarea>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        {% endif %}
+                            <div class="text-center">
+                                {% if messages %}
+                                    {% for msg in messages %}
+                                        <div class="message text-danger fw-bolder pt-2">{{ msg }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary mt-4">Обновить данные профиля
+                                </button>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body p-0">
-                                <ul class="list-group list-group-flush rounded-3">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fas fa-globe fa-lg text-warning"></i>
-                                        <p class="mb-0">https://mdbootstrap.com</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                                        <p class="mb-0">@mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card mb-4 mb-md-0">
-                            <div class="card-body p-0">
-                                <ul class="list-group list-group-flush rounded-3">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fas fa-globe fa-lg text-warning"></i>
-                                        <p class="mb-0">https://mdbootstrap.com</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                                        <p class="mb-0">@mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
         </div>
     </div>

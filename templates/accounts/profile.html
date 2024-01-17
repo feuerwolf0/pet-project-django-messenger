@@ -6,40 +6,24 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="{{ account.avatar.url }}" alt="avatar"
-                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <div class="img-profile">
+                            <img src="{{ account.avatar.url }}" alt="avatar"
+                                 class="rounded-circle  img-fluid">
+                        </div>
                         <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
                         {% if account.status %}
                             <p class="text-muted mb-1">{{ account.status }}</p>
                         {% endif %}
                         <!--       редактировать профиль                 -->
-                        <button class="btn btn-link btn-outline-primary mt-2">
-                            <a href="{% url 'profile_edit' %}">Редактировать профиль</a>
-                        </button>
+                        <a href="{% url 'profile_edit' %}">
+                            <button class="btn btn-link btn-outline-primary mt-2">
+                                Редактировать профиль
+                            </button>
+                        </a>
                     </div>
                 </div>
                 <!--      Опции профиля    -->
-                <div class="card mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush rounded-3">
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Мои друзья</a>
-                                </button>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Сообщения</a>
-                                </button>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-1">
-                                <button class="btn btn-link btn-outline btn-block btn-lg">
-                                    <a href="" class="fw-bolder fs-6">Найти друга</a>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                {% include 'accounts/blocks/profile_sidebar.html' %}
             </div>
             <div class="col-lg-8">
                 <div class="card mb-4">
@@ -49,7 +33,7 @@
                                 <p class="mb-0 fw-bolder">Никнейм</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="fw-bolder mb-0">!{{ account.username }}</p>
+                                <p class="fw-bolder mb-0">{{ account.username }}</p>
                             </div>
                         </div>
                         <hr>

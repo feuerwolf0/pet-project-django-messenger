@@ -56,8 +56,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,6 +139,7 @@ MEDIA_AVATARS = 'avatars'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:profile'
 
 # максимальный размер фотографии профиля в MB

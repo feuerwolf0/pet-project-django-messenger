@@ -59,7 +59,7 @@ class FriendManager(models.Manager):
                 friends.append(u.to_user)
         return friends
 
-    def is_friends(self, owner, profile):
+    def are_friends(self, owner, profile):
         qs = super().filter(from_user__in=[owner, profile], to_user__in=[owner, profile])
         if not qs:
             return False
@@ -69,7 +69,7 @@ class FriendManager(models.Manager):
         qs = super().filter(from_user__in=[owner, profile], to_user__in=[owner, profile])
 
         if not qs:
-            raise FriendsDoesNotExist("Дружбы не найдено")
+            raise FriendsDoesNotExist("Дружба не найдена")
 
         qs.delete()
 

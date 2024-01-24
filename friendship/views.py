@@ -20,7 +20,7 @@ def user_profile_view(request, username):
     outgoing_friend_requests = FriendshipRequest.objects.filter(from_user=owner,
                                                                 to_user=profile)
 
-    in_friends = Friend.objects.is_friends(owner, profile)
+    in_friends = Friend.objects.are_friends(owner, profile)
 
     context = {
         'account': profile,
@@ -56,7 +56,10 @@ def myfriends_view(request):
 def add_friend(request):
     owner = Account.objects.get(user=request.user)
     profile = request.POST.get('to_user').lower().strip()
-    profile = Account.objects.get(username=profile)
+    try:
+        profile = Account.objects.get(username=profile)
+    except Account.DoesNotExist:
+        messages.error(request, 'Ошибка при добавлении в друзья')
 
     cur_requests = FriendshipRequest.objects.filter(from_user=profile, to_user=owner)
 

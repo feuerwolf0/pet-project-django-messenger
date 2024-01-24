@@ -49,3 +49,8 @@ body {
     /*vertical-align: center;*/
 
 }
+
+.people-search {
+    max-width: 250px;
+    min-width: 150px;
+}

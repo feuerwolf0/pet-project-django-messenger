@@ -2,112 +2,67 @@
 {% block content %}
     <div class="container py-5">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <div class="img-profile">
-                            <img src="{{ account.avatar.url }}" alt="avatar"
-                                 class="rounded-circle  img-fluid">
-                        </div>
-                        <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
-                        {% if account.status %}
-                            <p class="text-muted mb-1">{{ account.status }}</p>
-                        {% endif %}
-                        <!--       редактировать профиль                 -->
-                        <a href="{% url 'profile_edit' %}">
-                            <button class="btn btn-link btn-outline-primary mt-2">
-                                Редактировать профиль
-                            </button>
-                        </a>
-                    </div>
-                </div>
-                <!--      Опции профиля    -->
-                {% include 'accounts/blocks/profile_sidebar.html' %}
-            </div>
-            <div class="col-lg-8">
+            <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="row">
-                            {% for acc in accounts %}
-                            <div class="col-sm-3">
-                                <p class="mb-0 fw-bolder">{{ acc.first_name }}</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="fw-bolder mb-0">{{ acc.last_name }}</p>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Имя</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ account.first_name }} {{ account.last_name }}</p>
+                        <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
+                            <div class="">teeeeeeeeeeeeeeeeeeee</div>
+                            <div class="input-group people-search">
+                                <div class="form-outline" data-mdb-input-init>
+                                    <input type="search" id="form1" class="form-control"/>
+                                    <label class="form-label" for="form1">Search</label>
+                                </div>
+                                <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+                                    <i class="fas fa-search"></i>
+                                </button>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Email</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ account.email }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Пол</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ gender }}</p>
-                            </div>
-                        </div>
-                        {% if  account.age %}
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Возраст</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        {% for acc in accounts %}
+                            <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
+                                <div class="img-myfriends">
+                                    <a href="{% url 'user_profile' acc.username %}">
+                                        <img src="{{ acc.avatar.url }}" alt="avatar"
+                                             class="rounded-circle img-fluid">
+                                    </a>
                                 </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.age }}</p>
-                                </div>
+
+                                <p class="fw-bolder m-2 ms-5 me-auto">
+                                    <a href="{% url 'user_profile' acc.username %}">
+                                        {{ acc.first_name }} {{ acc.last_name }}
+                                    </a>
+                                </p>
+                                <form method="POST" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="from" value="search">
+                                    <input type="hidden" name="to_user" value="{{ fr.from_user.username }}">
+                                    <button class="btn btn-primary mt-2 me-2" type="submit">
+                                        Добавить в друзья
+                                    </button>
+                                </form>
+                                <form method="POST" action="">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="from" value="search">
+                                    <input type="hidden" name="to_user" value="{{ fr.from_user.username }}">
+                                    <button class="btn btn-primary mt-2" type="submit">
+                                        Написать сообщение
+                                    </button>
+                                </form>
+
+
                             </div>
-                        {% endif %}
-                        {% if account.city %}
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Город</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.city }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if account.job %}
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">Место работы</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.job }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
-                        {% if account.about %}
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <p class="mb-0">О себе</p>
-                                </div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ account.about }}</p>
-                                </div>
-                            </div>
-                        {% endif %}
+                            {% if not forloop.last %}
+                                <hr/>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -2,10 +2,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
-from django.views.generic import DetailView, ListView
+from django.views.generic import ListView
 
 from accounts.models import Account
-from friendship.models import FriendshipRequest
+from friendship.models import FriendshipRequest, Friend
 
 
 @login_required
@@ -42,9 +42,10 @@ class PeopleView(LoginRequiredMixin, ListView):
 def myfriends_view(request):
     account = Account.objects.get(user=request.user)
     friendship_requests = FriendshipRequest.objects.filter(to_user=account)
-    print(friendship_requests)
+    friends = Friend.objects.friends(account)
     context = {
         'account': account,
-        'friendship_requests': friendship_requests
+        'friendship_requests': friendship_requests,
+        'friends': friends
     }
     return render(request, 'friendship/myfriends.html', context)

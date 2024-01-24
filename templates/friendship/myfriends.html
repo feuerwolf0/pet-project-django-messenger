@@ -2,52 +2,98 @@
 {% block content %}
     <div class="container py-5">
 
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <div class="img-profile">
-                        <img src="{{ account.avatar.url }}" alt="avatar"
-                             class="rounded-circle  img-fluid">
-                    </div>
-                    <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
-                    {% if account.status %}
-                        <p class="text-muted mb-1">{{ account.status }}</p>
-                    {% endif %}
-                    <!--       редактировать профиль                 -->
-                    <a href="{% url 'profile_edit' %}">
-                        <button class="btn btn-link btn-outline-primary mt-2">
-                            Редактировать профиль
-                        </button>
-                    </a>
-                </div>
-            </div>
-            <!--      Опции профиля    -->
-            {% include 'accounts/blocks/profile_sidebar.html' %}
-        </div>
-        {% if friendship_requests %}
-            <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-4">
                 <div class="card mb-4">
-                    <div class="card-body">
-                        {% for fr in friendship_requests %}
-                            <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
-                                <div class="img-myfriends">
-                                    <img src="{{ fr.from_user.avatar.url }}" alt="avatar"
-                                         class="rounded-circle img-fluid">
-                                </div>
-                                <p class="fw-bolder m-2 ms-5 me-auto">{{ fr.from_user.first_name }} {{ fr.from_user.last_name }}</p>
-                                <button type="button" class="btn btn-primary me-2 m-2" data-mdb-ripple-init>Принять в
-                                    друзья
-                                </button>
-                                <button type="button" class="btn btn-danger m-2" data-mdb-ripple-init>Удалить</button>
-
-                            </div>
-                        {% endfor %}
+                    <div class="card-body text-center">
+                        <div class="img-profile">
+                            <img src="{{ account.avatar.url }}" alt="avatar"
+                                 class="rounded-circle  img-fluid">
+                        </div>
+                        <h5 class="my-3 mt-0">{{ account.first_name }} {{ account.last_name }}</h5>
+                        {% if account.status %}
+                            <p class="text-muted mb-1">{{ account.status }}</p>
+                        {% endif %}
+                        <!--       редактировать профиль                 -->
+                        <a href="{% url 'profile_edit' %}">
+                            <button class="btn btn-link btn-outline-primary mt-2">
+                                Редактировать профиль
+                            </button>
+                        </a>
                     </div>
                 </div>
+                <!--      Опции профиля    -->
+                {% include 'accounts/blocks/profile_sidebar.html' %}
             </div>
-        {% endif %}
-    {% if friends %}
-    {% endif %}
+            <div class="col-lg-8">
+                {% if friendship_requests %}
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            {% for fr in friendship_requests %}
+                                <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
+                                    <div class="img-myfriends">
+                                        <a href="{% url 'user_profile' fr.from_user.username %}">
+                                            <img src="{{ fr.from_user.avatar.url }}" alt="avatar"
+                                                 class="rounded-circle img-fluid">
+                                        </a>
+                                    </div>
+                                    <p class="fw-bolder m-2 ms-5 me-auto">
+                                        <a href="{% url 'user_profile' fr.from_user.username %}">
+                                            {{ fr.from_user.first_name }} {{ fr.from_user.last_name }}
+                                        </a>
+                                    </p>
+                                    <button type="button" class="btn btn-primary me-2 m-2" data-mdb-ripple-init>Принять
+                                        в
+                                        друзья
+                                    </button>
+                                    <button type="button" class="btn btn-danger m-2" data-mdb-ripple-init>Удалить
+                                    </button>
+
+                                </div>
+
+                                {% if not forloop.last %}
+                                    <hr/>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                {% if friends %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            {% for fr in friends %}
+                                <div class="my-friend-list d-flex align-items-center justify-content-end flex-wrap">
+                                    <div class="img-myfriends">
+                                        <a href="{% url 'user_profile' fr.username %}">
+                                            <img src="{{ fr.avatar.url }}" alt="avatar"
+                                                 class="rounded-circle img-fluid">
+                                        </a>
+                                    </div>
+
+                                    <p class="fw-bolder m-2 ms-5 me-auto">
+                                        <a href="{% url 'user_profile' fr.username %}">
+                                            {{ fr.first_name }} {{ fr.last_name }}
+                                        </a>
+                                    </p>
+
+                                    <button type="button" class="btn btn-primary me-2 m-2" data-mdb-ripple-init>
+                                        Сообщения
+                                    </button>
+                                    {#                                    <button type="button" class="btn btn-danger m-2" data-mdb-ripple-init>Удалить#}
+                                    {#                                    </button>#}
+
+                                </div>
+                                {% if not forloop.last %}
+                                    <hr/>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock content %}

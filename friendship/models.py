@@ -1,8 +1,9 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from accounts.models import Account
-from django.core.exceptions import ValidationError
 
 
 class FriendshipRequest(models.Model):
@@ -21,8 +22,9 @@ class FriendshipRequest(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Friendship Request: {self.from_user} -> {self.to_user}'
+        return f'Запрос в друзья: {self.from_user} -> {self.to_user}'
 
+    # Принять заявку в друзья
     def accept(self):
         Friend.objects.create(from_user=self.from_user, to_user=self.to_user)
         Friend.objects.create(from_user=self.to_user, to_user=self.from_user)
@@ -32,11 +34,34 @@ class FriendshipRequest(models.Model):
 
         return True
 
+    # Отклонить заявку в друзья
+    def reject(self):
+        self.rejected_at = timezone.now()
+        return True
+
+
+class FriendManager(models.Manager):
+    def friends(self, user):
+        qs = super().prefetch_related('to_user').filter(from_user=user)
+        qs |= super().prefetch_related('from_user').filter(to_user=user)
+
+        friends = list()
+        for u in qs:
+            if u.to_user == user:
+                friends.append(u.from_user)
+            else:
+                friends.append(u.to_user)
+        return friends
+
 
 class Friend(models.Model):
-    from_user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='friend_from')
+    from_user = models.ForeignKey(Account,
+                                  on_delete=models.CASCADE,
+                                  related_name='friend_from')
     to_user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='friend_to')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = FriendManager()
 
     class Meta:
         verbose_name = 'Друг'
@@ -48,4 +73,5 @@ class Friend(models.Model):
     def save(self, *args, **kwargs):
         if self.to_user == self.from_user:
             raise ValidationError('Нельзя дружить самим с собой')
-        return super()
+
+        super().save(*args, **kwargs)

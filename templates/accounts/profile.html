@@ -61,14 +61,15 @@
                             </div>
                             <div class="col-sm-9">
                                 <div class="col-sm-9">
-                                {% if account.gender == 1 %}
-                                <p class="text-muted mb-0">Мужчина</p>
-                                {% else %}
-                                <p class="text-muted mb-0">Женщина</p>
-                                {% endif %}
+                                    {% if account.gender == 1 %}
+                                        <p class="text-muted mb-0">Мужчина</p>
+                                    {% else %}
+                                        <p class="text-muted mb-0">Женщина</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        {% if  account.age %}
+                        {% if account.age %}
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">

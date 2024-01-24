@@ -31,4 +31,4 @@ class Account(models.Model):
         ordering = ('created_at', )
 
     def __str__(self):
-        return f'Аккаунт: {self.username}'
+        return self.username

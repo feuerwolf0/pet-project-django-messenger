@@ -95,25 +95,54 @@
                         {% if account.status %}
                             <p class="text-muted mb-1">{{ account.status }}</p>
                         {% endif %}
-                        {% if not friendship_request %}
-                            <form method="POST" action="{% url 'add_friend' account.username %}">
-                                <input type="hidden" name="user_to" value="{{ account.username }}">
-                                <button class="btn btn-primary mt-2" type="submit">
-                                    Добавить в друзья
-                                </button>
-                            </form>
-                        {% else %}
-                            <button class="btn btn-primary mt-2" type="submit" disabled>
-                                Заявка отправлена
-                            </button>
-                        {% endif %}
                         <a href="">
-                            <button class="btn btn-primary mt-2">
+                            <button class="btn btn-primary mt-2 container-fluid">
                                 Написать сообщение
                             </button>
                         </a>
+                        {% if incoming_request %}
+                            <form method="POST" action="{% url 'accept_friend' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user" value="{{ account.username }}">
+                                <button class="btn btn-primary mt-2 container-fluid" type="submit">
+                                    Принять заявку
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'reject_friend' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user" value="{{ account.username }}">
+                                <button class="btn btn-primary mt-2 container-fluid" type="submit">
+                                    Отклонить заявку
+                                </button>
+                            </form>
+                        {% elif outgoing_request %}
+                            <form method="POST" action="{% url 'cancel_friend' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user" value="{{ account.username }}">
+                                <button class="btn btn-danger mt-2 container-fluid" type="submit">
+                                    Отменить заявку в друзья
+                                </button>
+                            </form>
+                        {% elif in_friends %}
+                            <form method="POST" action="{% url 'delete_friend' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user" value="{{ account.username }}">
+                                <button class="btn btn-danger mt-2 container-fluid" type="submit">
+                                    Удалить из друзей
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'add_friend' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="to_user" value="{{ account.username }}">
+                                <button class="btn btn-primary mt-2 container-fluid" type="submit">
+                                    Добавить в друзья
+                                </button>
+                            </form>
+                        {% endif %}
+
                         <a href="">
-                            <button class="btn btn-danger mt-2">
+                            <button class="btn btn-danger mt-2 container-fluid">
                                 Заблокировать
                             </button>
                         </a>

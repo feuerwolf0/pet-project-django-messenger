@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from accounts.models import Account
+from friendship.exceptions import FriendsDoesNotExist
 
 
 class FriendshipRequest(models.Model):
@@ -17,8 +18,8 @@ class FriendshipRequest(models.Model):
     rejected_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Запрос в друзья'
-        verbose_name_plural = 'Запросы в друзья'
+        verbose_name = 'Заявка в друзья'
+        verbose_name_plural = 'Заявки в друзья'
         ordering = ['-created_at']
 
     def __str__(self):
@@ -27,7 +28,6 @@ class FriendshipRequest(models.Model):
     # Принять заявку в друзья
     def accept(self):
         Friend.objects.create(from_user=self.from_user, to_user=self.to_user)
-        Friend.objects.create(from_user=self.to_user, to_user=self.from_user)
 
         self.delete()
         FriendshipRequest.objects.filter(from_user=self.to_user, to_user=self.from_user).delete()
@@ -37,6 +37,12 @@ class FriendshipRequest(models.Model):
     # Отклонить заявку в друзья
     def reject(self):
         self.rejected_at = timezone.now()
+        self.save()
+        return True
+
+    # Отменить заявку в друзья
+    def cancel(self):
+        self.delete()
         return True
 
 
@@ -52,6 +58,20 @@ class FriendManager(models.Manager):
             else:
                 friends.append(u.to_user)
         return friends
+
+    def is_friends(self, owner, profile):
+        qs = super().filter(from_user__in=[owner, profile], to_user__in=[owner, profile])
+        if not qs:
+            return False
+        return True
+
+    def delete_friend(self, owner, profile):
+        qs = super().filter(from_user__in=[owner, profile], to_user__in=[owner, profile])
+
+        if not qs:
+            raise FriendsDoesNotExist("Дружбы не найдено")
+
+        qs.delete()
 
 
 class Friend(models.Model):

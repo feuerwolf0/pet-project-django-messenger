@@ -43,12 +43,22 @@
                                             {{ fr.from_user.first_name }} {{ fr.from_user.last_name }}
                                         </a>
                                     </p>
-                                    <button type="button" class="btn btn-primary me-2 m-2" data-mdb-ripple-init>Принять
-                                        в
-                                        друзья
-                                    </button>
-                                    <button type="button" class="btn btn-danger m-2" data-mdb-ripple-init>Удалить
-                                    </button>
+                                    <form method="POST" action="{% url 'accept_friend' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="myfriends" value="true">
+                                        <input type="hidden" name="to_user" value="{{ fr.from_user.username }}">
+                                        <button class="btn btn-primary mt-2 me-2" type="submit">
+                                            Принять заявку
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{% url 'reject_friend' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="myfriends" value="true">
+                                        <input type="hidden" name="to_user" value="{{ fr.from_user.username }}">
+                                        <button class="btn btn-danger mt-2" type="submit">
+                                            Удалить
+                                        </button>
+                                    </form>
 
                                 </div>
 
